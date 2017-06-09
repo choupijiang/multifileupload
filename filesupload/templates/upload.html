@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}文件上传{% endblock %}
+{% block content %}
+     <form action="{% url 'upload' %}" method="post"  enctype="multipart/form-data">
+        {% csrf_token %}
+           <p><label for="id_name">数据表名:</label> <input id="id_name" maxlength="200" name="name" type="text" /></p>
+            <p><label for="id_files">文件名:</label> <input id="id_files" name="files" type="file" multiple /></p>
+            <p><input type="submit" ></p>
+        </form>
+{% endblock %}
