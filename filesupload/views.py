@@ -1,14 +1,13 @@
 from django.shortcuts import *
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
+
 from .models import DataTable, FileModel
 from .serializers import DataSerializer
-from rest_framework.response import Response
-from django.views.generic.edit import FormView
-from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.status import HTTP_201_CREATED
 
 
-from django.forms import modelformset_factory
 # Create your views here.
 
 class ListDatas(APIView):
@@ -20,11 +19,14 @@ class ListDatas(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        print request.data
+        files = request.data.pop('files')
         data_serial = DataSerializer(data=request.data)
         if data_serial.is_valid():
-            data_serial.save()
+            datatable = data_serial.save()
+            for file in files:
+                FileModel.objects.create(datatable=datatable, file=file)
             return Response(data_serial.data, status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)
 
 
 

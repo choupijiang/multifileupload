@@ -9,7 +9,16 @@ from django.db import models
 class DataTable(models.Model):
     name = models.CharField(max_length=200, verbose_name="数据表名")
 
+    class Meta:
+        verbose_name = "数据表"
+
+    def __str__(self):
+        return "the name :{}".format(self.name)
+
 
 class FileModel(models.Model):
     file = models.FileField(upload_to="images", verbose_name="文件名")
     datatable = models.ForeignKey(DataTable, related_name="files")
+
+    class Meta:
+        verbose_name = "文件"
